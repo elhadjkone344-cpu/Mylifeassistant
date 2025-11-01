@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyLife Assistant - Organisez votre vie gratuitement</title>
+    <meta name="description" content="Application de productivité gratuite pour gérer vos tâches, notes et agenda">
+    <meta name="theme-color" content="#6366f1">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+        
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            background: white;
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 30px 20px 25px;
+            text-align: center;
+        }
+        
+        .app-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .app-subtitle {
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 15px 10px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .page-content {
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: var(--light);
+            padding: 20px 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+        }
+        
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="app-header">
+            <div class="app-title">📱 MyLife Assistant</div>
+            <div class="app-subtitle">Organisez votre vie gratuitement</div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div style="font-size: 18px; font-weight: bold;">100%</div>
+                    <div style="font-size: 11px;">Gratuit</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-size: 18px; font-weight: bold;">📝</div>
+                    <div style="font-size: 11px;">Tâches</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-size: 18px; font-weight: bold;">📋</div>
+                    <div style="font-size: 11px;">Notes</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="page-content">
+            <!-- Page Accueil -->
+            <div id="page-accueil" class="page">
+                <div class="card">
+                    <h3 style="margin-bottom: 15px;">🎉 Bienvenue sur MyLife !</h3>
+                    <p>Votre application de productivité <strong>100% gratuite</strong> et <strong>accessible à tous</strong>.</p>
+                </div>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📝</div>
+                        <div style="font-weight: 600; font-size: 14px;">Gestion des Tâches</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📋</div>
+                        <div style="font-weight: 600; font-size: 14px;">Notes Personnelles</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📅</div>
+                        <div style="font-weight: 600; font-size: 14px;">Agenda Intégré</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <div style="font-weight: 600; font-size: 14px;">Application Mobile</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h4 style="margin-bottom: 15px;">🚀 Commencez Maintenant</h4>
+                    <button class="btn" onclick="changerPage('taches')">
+                        📝 Gérer mes tâches
+                    </button>
+                    <button class="btn btn-secondary" onclick="changerPage('installation')">
+                        📱 Installer l'app
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Page Tâches -->
+            <div id="page-taches" class="page hidden">
+                <div class="card">
+                    <h3 style="margin-bottom: 15px;">📝 Mes Tâches</h3>
+                    <input type="text" id="nouvelleTache" placeholder="➕ Nouvelle tâche..." style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px;">
+                    <button class="btn" onclick="ajouterTache()">Ajouter la tâche</button>
+                </div>
+                
+                <div id="liste-taches">
+                    <!-- Tâches chargées dynamiquement -->
+                </div>
+            </div>
+            
+            <!-- Page Installation -->
+            <div id="page-installation" class="page hidden">
+                <div class="card">
+                    <h3 style="margin-bottom: 15px;">📱 Installation</h3>
+                    <p style="margin-bottom: 15px;">Installez MyLife Assistant sur votre téléphone comme une vraie application :</p>
+                    
+                    <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <h4 style="color: #0369a1; margin-bottom: 10px;">📲 Étapes d'installation :</h4>
+                        <ol style="padding-left: 20px;">
+                            <li style="margin-bottom: 8px;">Ouvrez le menu de votre navigateur (⋯)</li>
+                            <li style="margin-bottom: 8px;">Sélectionnez "Ajouter à l'écran d'accueil"</li>
+                            <li style="margin-bottom: 8px;">Confirmez l'installation</li>
+                            <li>Lancez l'app depuis votre écran d'accueil !</li>
+                        </ol>
+                    </div>
+                    
+                    <button class="btn" onclick="installerApp()">
+                        📲 Installer MyLife Assistant
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <h4 style="margin-bottom: 15px;">🌍 Partagez l'application</h4>
+                    <p style="margin-bottom: 15px;">Partagez MyLife avec vos amis et famille :</p>
+                    <button class="btn btn-secondary" onclick="partagerApp()">
+                        📤 Partager le lien
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Page À Propos -->
+            <div id="page-propos" class="page hidden">
+                <div class="card">
+                    <h3 style="margin-bottom: 15px;">ℹ️ À Propos</h3>
+                    <p><strong>Version :</strong> 1.0.0</p>
+                    <p><strong>Développeur :</strong> Communauté MyLife</p>
+                    <p><strong>Prix :</strong> 100% Gratuit - Toujours</p>
+                    <p><strong>Code :</strong> Open Source</p>
+                </div>
+                
+                <div class="card">
+                    <h4 style="margin-bottom: 15px;">💝 Soutenir le projet</h4>
+                    <p>MyLife Assistant est maintenu bénévolement. Partagez-le avec le plus de monde possible !</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="changerPage('accueil')">
+                <div>🏠</div>
+                <div style="font-size: 10px;">Accueil</div>
+            </div>
+            <div class="nav-item" onclick="changerPage('taches')">
+                <div>📝</div>
+                <div style="font-size: 10px;">Tâches</div>
+            </div>
+            <div class="nav-item" onclick="changerPage('installation')">
+                <div>📱</div>
+                <div style="font-size: 10px;">Installation</div>
+            </div>
+            <div class="nav-item" onclick="changerPage('propos')">
+                <div>ℹ️</div>
+                <div style="font-size: 10px;">À Propos</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Données de l'application
+        let taches = JSON.parse(localStorage.getItem('mylife-taches')) || [
+            { id: 1, texte: "👋 Bienvenue dans MyLife Assistant !", terminee: false },
+            { id: 2, texte: "📱 Installer l'application sur votre téléphone", terminee: false },
+            { id: 3, texte: "✅ Commencer à organiser votre vie", terminee: false }
+        ];
+        
+        // Gestion des pages
+        function changerPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            document.getElementById('page-' + page).classList.remove('hidden');
+            const navItems = document.querySelectorAll('.nav-item');
+            const pageIndex = ['accueil', 'taches', 'installation', 'propos'].indexOf(page);
+            if (navItems[pageIndex]) navItems[pageIndex].classList.add('active');
+            
+            if (page === 'taches') actualiserTaches();
+        }
+        
+        // Gestion des tâches
+        function actualiserTaches() {
+            const liste = document.getElementById('liste-taches');
+            liste.innerHTML = taches.map(tache => 
+                '<div class="card" style="display: flex; align-items: center; gap: 12px;">' +
+                    '<div style="width: 20px; height: 20px; border: 2px solid #ddd; border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="basculerTache(' + tache.id + ')">' +
+                        (tache.terminee ? '✓' : '') +
+                    '</div>' +
+                    '<div style="flex: 1; ' + (tache.terminee ? 'text-decoration: line-through; color: #999;' : '') + '">' + 
+                        tache.texte + 
+                    '</div>' +
+                    '<button onclick="supprimerTache(' + tache.id + ')" style="background: none; border: none; cursor: pointer; color: var(--danger);">🗑️</button>' +
+                '</div>'
+            ).join('');
+            
+            localStorage.setItem('mylife-taches', JSON.stringify(taches));
+        }
+        
+        function ajouterTache() {
+            const input = document.getElementById('nouvelleTache');
+            const texte = input.value.trim();
+            if (texte) {
+                taches.unshift({
+                    id: Date.now(),
+                    texte: texte,
+                    terminee: false
+                });
+                input.value = '';
+                actualiserTaches();
+            }
+        }
+        
+        function basculerTache(id) {
+            const tache = taches.find(t => t.id === id);
+            if (tache) tache.terminee = !tache.terminee;
+            actualiserTaches();
+        }
+        
+        function supprimerTache(id) {
+            taches = taches.filter(t => t.id !== id);
+            actualiserTaches();
+        }
+        
+        // Installation PWA
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+        
+        function installerApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        alert('🎉 MyLife Assistant installé ! Retrouvez-le sur votre écran d\'accueil.');
+                    }
+                });
+            } else {
+                alert('📱 Pour installer : Menu navigateur → "Ajouter à l\'écran d\'accueil"');
+            }
+        }
+        
+        // Partage de l'application
+        function partagerApp() {
+            const url = window.location.href;
+            const texte = 'Découvrez MyLife Assistant - Application de productivité 100% gratuite !';
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'MyLife Assistant',
+                    text: texte,
+                    url: url
+                });
+            } else {
+                navigator.clipboard.writeText(url + '\n\n' + texte);
+                alert('📋 Lien copié ! Collez-le pour partager MyLife Assistant.');
+            }
+        }
+        
+        // Support Entrée pour ajouter des tâches
+        document.getElementById('nouvelleTache').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') ajouterTache();
+        });
+        
+        // Initialisation
+        actualiserTaches();
+    </script>
+</body>
+                      </html>
